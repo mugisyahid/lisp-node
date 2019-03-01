@@ -1,0 +1,28 @@
+{
+  "name": "lisp-node",
+  "version": "1.0.0",
+  "description": "simple lisp interpreter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "bin": {
+    "lisp-node": "./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mugisyahid/lisp-node.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mugisyahid/lisp-node/issues"
+  },
+  "homepage": "https://github.com/mugisyahid/lisp-node#readme",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "figlet": "^1.2.1",
+    "repl": "^0.1.3"
+  }
+}
