@@ -4,6 +4,9 @@ const chalk = require("chalk")
 const figlet = require("figlet")
 const repl = require("repl")
 
+const parserCommand = require('./modules/parser')
+const expression = require('./modules/expression')
+
 
 const fonts = ["Digital", "Doom", "Italic", "LCD"]
 
@@ -24,11 +27,17 @@ const init = () => {
 }
 
 const evaluate = (cmd, context, filename, callback) => {
-    console.log(cmd)
+    cmd = cmd.replace(/(\n)/gm,"")
+    if (expression.isValidExp(cmd)) {
+        console.log(expression.calculateOneExp(cmd))
+    } else {
+        console.log("not valid exp notation")
+    }
+
     callback(null)
 }
 
 
 init()
 
-const r = repl.start({ prompt: '> ', eval: evaluate })
+const r = repl.start({ prompt: `$ `, eval: evaluate })
