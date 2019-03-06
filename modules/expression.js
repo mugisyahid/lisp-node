@@ -1,17 +1,20 @@
 
 const math = require('./mathexp')
 
-function allToAtom(list, result, idx) {
-    if (idx && result) { list[idx] = result }
+function allToAtom(list) {
+    console.log(list)
     if (isAllAtom(list)) {
         return list
     } else {
         for (let i = 0; i < list.length; i++) {
             if (!isAtom(list[i])) { 
               if (isAllAtom(list[i])) {
-                  list[i] = calculateOneExp(list[i])
+                  let r = calculateOneExp(list[i])
+                  list[i] = r
               } else {
                   //TODO: call this function
+                  let l = allToAtom(list[i])
+                  list[i] = l
               }
             }
         }
@@ -23,7 +26,11 @@ function calculate(list) {
     if (isAllAtom(list)) {
         return calculateOneExp(list)
     } else {
-        let allAtom = allToAtom(list, null, null)
+        let allAtom = allToAtom(list)
+        while(!isAllAtom(allAtom)) {
+            allAtom = allToAtom(allAtom)
+        }       
+        console.log(allAtom)
         return calculateOneExp(allAtom)
     }
 }
