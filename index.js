@@ -4,7 +4,7 @@ const chalk = require("chalk")
 const figlet = require("figlet")
 const repl = require("repl")
 
-const parserCommand = require('./modules/parser')
+const parser = require('./modules/parser')
 const expression = require('./modules/expression')
 
 
@@ -27,13 +27,12 @@ const init = () => {
 }
 
 const evaluate = (cmd, context, filename, callback) => {
-    cmd = cmd.replace(/(\n)/gm,"")
-    if (expression.isValidExp(cmd)) {
-        console.log(expression.calculateOneExp(cmd))
+    let listoflist = parser(cmd.replace(/(\n)/gm,""))
+    if (listoflist) {
+        console.log(expression.calculate(listoflist))
     } else {
-        console.log("not valid exp notation")
+        console.log('not valid lisp command')
     }
-
     callback(null)
 }
 

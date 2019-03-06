@@ -1,42 +1,65 @@
 
 const math = require('./mathexp')
 
-function calculateOneExp(str) {
+function allToAtom(list, result, idx) {
+    if (idx && result) { list[idx] = result }
+    if (isAllAtom(list)) {
+        return list
+    } else {
+        for (let i = 0; i < list.length; i++) {
+            if (!isAtom(list[i])) { 
+              if (isAllAtom(list[i])) {
+                  list[i] = calculateOneExp(list[i])
+              } else {
+                  //TODO: call this function
+              }
+            }
+        }
+        return list
+    }
+}
+
+function calculate(list) {
+    if (isAllAtom(list)) {
+        return calculateOneExp(list)
+    } else {
+        let allAtom = allToAtom(list, null, null)
+        return calculateOneExp(allAtom)
+    }
+}
+
+function calculateOneExp(list) {
     let operator
     let operand = []
 
-    let tempOperand = ''
-    for (let i = 0; i < str.length; i++) {
-        if (str.charAt(i) !== '(' && str.charAt(i) !== ')' && str.charAt(i) !== ' ') {
-            tempOperand += str.charAt(i)
-        }
-        if (str.charAt(i) !== ' ' || str.charAt(i) !== ')') {
-            if (isOperator(tempOperand)) {
-                operator = tempOperand
-                tempOperand = ''
-            } else if (tempOperand !== ''){
-                operand.push(tempOperand)
-                tempOperand = ''
-            }
+    for (let i = 0; i < list.length; i++) {
+        if (isOperator(list[i])) {
+            operator = list[i]
+        } else if (isAtom(list[i])) {
+            operand.push(list[i])
         }
     }
 
-    // calculate based on operator
-    if (operator === '+') {
-        return operand.length > 0 ? operand.reduce((a, b) => +a + +b) : 0
+    if (math.isMathOperator(operator)) {
+        return math.mathExp(operator, operand)
     }
-    if (operator === '-') {
-        return operand.length > 0 ? operand.reduce((a, b) => +a - +b) : 0
-    }
-    if (operator === '*') {
-        return operand.length > 0 ? operand.reduce((a, b) => +a * +b) : 0
-    }
-    if (operator === '/') {
-        return operand.length > 0 ? operand.reduce((a, b) => +a / +b) : 0
-    }
-
 }
 
+
+function isAtom(arr) {
+    return !Array.isArray(arr)
+}
+
+function isAllAtom(arr) {
+    let result = true
+    for (let i = 0; i < arr.length; i++) {
+        if (!isAtom(arr[i])) { 
+            result = false
+            break
+        }
+    }
+    return result
+}
 
 function isOperator(char) {
     switch(char) {
@@ -50,20 +73,4 @@ function isOperator(char) {
     }
 }
 
-// TODO: should use stack checker
-function isValidExp(str) {
-    // kurung buka == kurung tutup
-    let kurungBuka = 0
-    for (let i = 0; i < str.length; i++) {
-        if (str.charAt(i) === '(') {
-            kurungBuka++
-        }
-        if (str.charAt(i) === ')') {
-            kurungBuka--
-        }
-    }
-    return kurungBuka == 0
-}
-
-
-module.exports = { isValidExp, calculateOneExp }
+module.exports = { calculate }
